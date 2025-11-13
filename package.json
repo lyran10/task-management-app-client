@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx server/index.js",
+    "dev": "tsx api/server.js",
     "build": "tsc -b && vite build",
-    "ssr:build": "vite build --outDir dist/client && vite build --ssr server/entry-server.tsx --outDir dist/server",
-    "serve:ssr": "node api/ssr.js",
+    "ssr:build": "vite build --outDir dist/client && vite build --ssr api/entry-server.tsx --outDir dist/server",
+    "serve:ssr": "node api/server.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
