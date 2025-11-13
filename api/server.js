@@ -1,30 +1,44 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 
-// Serve static files
 app.use(
-  express.static(path.resolve(__dirname, "../dist/client"), { index: false })
+  express.static(path.resolve(__dirname, "../dist/client"), {
+    index: false,
+  })
 );
 
-// SSR route
-app.get(async (req, res) => {
-  const template = fs.readFileSync(
-    path.resolve(__dirname, "../dist/client/index.html"),
-    "utf-8"
-  );
+app.use(async (req, res) => {
+  console.log(req.url)
+  try {
+    const entryServerPath = pathToFileURL(
+      path.resolve(__dirname, "../dist/server/entry-server.js")
+    ).href;
+    const { render } = await import(entryServerPath);
 
-  const { render } = await import("../dist/server/entry-server.js");
-  const appHtml = await render(req.url);
+    const template = fs.readFileSync(
+      path.resolve(__dirname, "../dist/client/index.html"),
+      "utf-8"
+    );
 
-  const html = template.replace(`<!--app-html-->`, appHtml);
-  res.setHeader("Content-Type", "text/html");
-  res.end(html);
+    const { html, styles } = await render(req.url);
+
+    const finalHtml = template
+      .replace("<!--inject-styles-->", styles)
+      .replace("<!--app-->", html);
+
+    res.status(200).setHeader("Content-Type", "text/html").send(finalHtml);
+  } catch (err) {
+    console.error("SSR Error:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
-export default app;
+app.listen(3000, () =>
+  console.log("✅ SSR Server running at http://localhost:3000")
+);
