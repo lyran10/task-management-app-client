@@ -43,34 +43,34 @@
 //   console.log("✅ SSR Server running at http://localhost:3000")
 // );
 
-import fs from "fs";
-import path from "path";
-import { pathToFileURL } from "url";
+// import fs from "fs";
+// import path from "path";
+// import { pathToFileURL } from "url";
 
-export default async function handler(req, res) {
-  try {
-    const entryServerPath = pathToFileURL(
-      path.resolve("./dist/server/entry-server.js")
-    ).href;
+// export default async function handler(req, res) {
+//   try {
+//     const entryServerPath = pathToFileURL(
+//       path.resolve("./dist/server/entry-server.js")
+//     ).href;
 
-    const { render } = await import(entryServerPath);
+//     const { render } = await import(entryServerPath);
 
-    const template = fs.readFileSync(
-      path.resolve("./dist/client/index.html"),
-      "utf-8"
-    );
+//     const template = fs.readFileSync(
+//       path.resolve("./dist/client/index.html"),
+//       "utf-8"
+//     );
 
-    const { html, styles } = await render(req.url);
+//     const { html, styles } = await render(req.url);
 
-    const finalHtml = template
-      .replace("<!--inject-styles-->", styles)
-      .replace("<!--app-->", html);
+//     const finalHtml = template
+//       .replace("<!--inject-styles-->", styles)
+//       .replace("<!--app-->", html);
 
-    res.setHeader("Content-Type", "text/html");
-    res.status(200).send(finalHtml);
-  } catch (err) {
-    console.error("SSR Error:", err);
-    res.status(500).send("Internal Server Error");
-  }
-}
+//     res.setHeader("Content-Type", "text/html");
+//     res.status(200).send(finalHtml);
+//   } catch (err) {
+//     console.error("SSR Error:", err);
+//     res.status(500).send("Internal Server Error");
+//   }
+// }
 

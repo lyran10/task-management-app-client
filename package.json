@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "tsx server/index.js",
-  "build": "npm run ssr:build",
-  "ssr:build": "vite build --outDir dist/client && vite build --ssr server/entry-server.tsx --outDir dist/server",
-  "start": "node server/index.js",
-  "lint": "eslint .",
-  "preview": "vite preview"
-},
+    "dev": "tsx server/index.js",
+    "build": "tsc -b && vite build",
+    "ssr:build": "vite build --outDir dist/client && vite build --ssr server/entry-server.tsx --outDir dist/server",
+    "serve:ssr": "node server/index.js",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
