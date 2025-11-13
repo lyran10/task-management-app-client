@@ -7,7 +7,7 @@
     "dev": "tsx server/index.js",
     "build": "tsc -b && vite build",
     "ssr:build": "vite build --outDir dist/client && vite build --ssr server/entry-server.tsx --outDir dist/server",
-    "serve:ssr": "node server/index.js",
+    "serve:ssr": "node api/ssr.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
