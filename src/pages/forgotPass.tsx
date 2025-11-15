@@ -13,6 +13,7 @@ import { useToast } from "../context/toastContext";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../common/loader";
 import { useAuth } from "../context/authContext";
+import PasswordInput from "../common/passwordInput";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
@@ -118,25 +119,9 @@ function ResetPasswordPage() {
               required
             />
 
-            <TextField
-              label="New Password"
-              type="password"
-              fullWidth
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              sx={{ mb: 2 }}
-              required
-            />
+            <PasswordInput value={newPassword} onChange={(e: any) => setNewPassword(e.target.value)} />
 
-            <TextField
-              label="Confirm Password"
-              type="password"
-              fullWidth
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              sx={{ mb: 2 }}
-              required
-            />
+            <PasswordInput id={"confirmPassword"} value={confirmPassword} onChange={(e: any) => setConfirmPassword(e.target.value)} />
 
             <Button
               type="submit"

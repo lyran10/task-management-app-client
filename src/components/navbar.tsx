@@ -14,16 +14,19 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useAuth } from "../context/authContext";
 import { useThemeMode } from "../context/themeModeContext";
+import { useToast } from "../context/toastContext";
 
 export const Navbar = () => {
   const navigate = useNavigate()
   const { user, signout } = useAuth();
   const { mode, toggle } = useThemeMode();
+  const { showToast } = useToast()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleSignout = () => {
     signout()
     setAnchorEl(null);
+    showToast("Signout Successfully", "success")
     navigate("/")
   }
 

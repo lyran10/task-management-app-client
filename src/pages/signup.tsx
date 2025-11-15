@@ -5,6 +5,7 @@ import { useAuth } from "../context/authContext";
 import { useThemeMode } from "../context/themeModeContext";
 import { useToast } from "../context/toastContext";
 import { Loader } from "../common/loader";
+import PasswordInput from "../common/passwordInput";
 
 const SignUpPage = () => {
   const { signup, user } = useAuth();
@@ -94,21 +95,8 @@ const SignUpPage = () => {
             sx={{ mb: 2 }}
             required
           />
-          <TextField
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            fullWidth
-            sx={{ mb: 2 }}
-            required
-          />
-
-          {/* {error && (
-            <Typography color="error" sx={{ mb: 1 }}>
-              {error}
-            </Typography>
-          )} */}
+          
+          <PasswordInput value={password} onChange={(e: any) => setPassword(e.target.value)} />
 
           <Button 
           type="submit" 

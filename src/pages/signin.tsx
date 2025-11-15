@@ -6,12 +6,17 @@ import {
   Paper,
   TextField,
   Typography,
+  IconButton,
+  InputAdornment
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import { useThemeMode } from "../context/themeModeContext";
 import { useToast } from "../context/toastContext";
 import { Loader } from "../common/loader";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import PasswordInput from "../common/passwordInput";
 
 function SignInPage() {
   const { signin, user } = useAuth();
@@ -107,15 +112,7 @@ function SignInPage() {
               required
             />
 
-            <TextField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              fullWidth
-              sx={{ mb: 1 }}
-              required
-            />
+            <PasswordInput value={password} onChange={(e: any) => setPassword(e.target.value)} />
 
             <Typography
               variant="body2"
