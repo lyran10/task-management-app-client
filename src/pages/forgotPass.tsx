@@ -7,24 +7,28 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/authContext";
+import axios from "axios";
 import { useThemeMode } from "../context/themeModeContext";
 import { useToast } from "../context/toastContext";
+import { useNavigate } from "react-router-dom";
 import { Loader } from "../common/loader";
+import { useAuth } from "../context/authContext";
 
-function SignInPage() {
-  const { signin, user } = useAuth();
+const API_BASE = import.meta.env.VITE_API_URL;
+
+function ResetPasswordPage() {
+  const { user } = useAuth()
   const { mode } = useThemeMode();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if(user) navigate("/dashboard")
-  },[])
+    useEffect(() => {
+      if(user) navigate("/dashboard")
+    },[])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,26 +45,34 @@ function SignInPage() {
       return;
     }
 
-    if (!password.trim()) {
-      showToast("Password is required", "error");
+    if (!newPassword.trim()) {
+      showToast("New password is required", "error");
       return;
     }
 
-    if (password.length < 6) {
+    if (newPassword.length < 6) {
       showToast("Password must be at least 6 characters", "error");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      showToast("Passwords do not match", "error");
       return;
     }
 
     try {
       setLoading(true);
-      await signin(email, password);
-      showToast("Signed in successfully", "success");
-      navigate("/dashboard");
+      await axios.post(`${API_BASE}/auth/reset-password`, {
+        email,
+        newPassword,
+      });
+
+      showToast("Password reset successfully!", "success");
+      navigate("/");
     } catch (err: any) {
-      showToast(err.response?.data?.message || "Sign in failed", "error");
-      console.log(err)
-    } finally {
-      setLoading(false);
+      showToast(err.response?.data?.message || "Failed to reset password","error");
+    }finally {
+     setLoading(false);
     }
   };
 
@@ -89,47 +101,42 @@ function SignInPage() {
         >
           <Typography
             variant="h5"
-            gutterBottom
             align="center"
             sx={{ fontWeight: "bold", mb: 3 }}
           >
-            Sign In
+            Reset Password
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               label="Email"
               type="email"
+              fullWidth
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              fullWidth
               sx={{ mb: 2 }}
               required
             />
 
             <TextField
-              label="Password"
+              label="New Password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               fullWidth
-              sx={{ mb: 1 }}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              sx={{ mb: 2 }}
               required
             />
 
-            <Typography
-              variant="body2"
-              sx={{
-                textAlign: "right",
-                mb: 2,
-                cursor: "pointer",
-                color: "primary.main",
-                textDecoration: "underline",
-              }}
-              onClick={() => navigate("/forgot-password")}
-            >
-              Forgot Password?
-            </Typography>
+            <TextField
+              label="Confirm Password"
+              type="password"
+              fullWidth
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              sx={{ mb: 2 }}
+              required
+            />
 
             <Button
               type="submit"
@@ -138,14 +145,27 @@ function SignInPage() {
               disabled={loading}
               sx={{
                 mt: 1,
-                py: 1.2,
+                py: 1.1,
                 fontWeight: "bold",
                 textTransform: "none",
-                height: 48,
               }}
             >
-              {loading ? <Loader size={22} /> : "Sign In"}
+              {loading ? <Loader size={22} /> : "Reset Password"}
             </Button>
+
+            <Typography
+              variant="body2"
+              sx={{
+                mt: 2,
+                textAlign: "center",
+                cursor: "pointer",
+                color: "primary.main",
+                textDecoration: "underline",
+              }}
+              onClick={() => navigate("/")}
+            >
+              Back to Sign In
+            </Typography>
           </Box>
         </Paper>
       </Container>
@@ -153,4 +173,4 @@ function SignInPage() {
   );
 }
 
-export default SignInPage;
+export default ResetPasswordPage;

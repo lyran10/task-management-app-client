@@ -11,18 +11,15 @@ interface ThemeModeContextType {
 const ThemeModeContext = createContext<ThemeModeContextType | undefined>(undefined);
 
 export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
-  // ✅ Start with "light" during SSR to avoid hydration mismatch
   const [mode, setMode] = useState<ThemeMode>("light");
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // ✅ Run only on client to sync with localStorage
   useEffect(() => {
     const stored = localStorage.getItem("tm_mode") as ThemeMode | null;
     if (stored) setMode(stored);
     setIsHydrated(true);
   }, []);
 
-  // ✅ Persist on change (client only)
   useEffect(() => {
     if (isHydrated) localStorage.setItem("tm_mode", mode);
   }, [mode, isHydrated]);
@@ -42,7 +39,6 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  // ✅ Render children only after hydration to avoid flicker/mismatch
   if (!isHydrated) {
     return (
       <ThemeModeContext.Provider value={{ mode, toggle }}>

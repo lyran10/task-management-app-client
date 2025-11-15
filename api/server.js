@@ -14,7 +14,6 @@ app.use(
 );
 
 app.use(async (req, res) => {
-  console.log(req.url)
   try {
     const entryServerPath = pathToFileURL(
       path.resolve(__dirname, "../dist/server/entry-server.js")

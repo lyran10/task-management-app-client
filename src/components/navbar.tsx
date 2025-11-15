@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -15,20 +15,25 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useAuth } from "../context/authContext";
 import { useThemeMode } from "../context/themeModeContext";
 
-// -------------------- Top Navigation Bar --------------------
 export const Navbar = () => {
+  const navigate = useNavigate()
   const { user, signout } = useAuth();
   const { mode, toggle } = useThemeMode();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const handleSignout = () => {
+    signout()
+    setAnchorEl(null);
+    navigate("/")
+  }
+
   return (
     <AppBar position="static" color="primary" elevation={2} sx={{height : "10%", width : "100%"}}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        {/* App Title */}
         <Typography
           variant="h6"
-          component={Link}
-          to="/"
+          // component={Link}
+          // to="/"
           sx={{
             color: "inherit",
             textDecoration: "none",
@@ -44,14 +49,12 @@ export const Navbar = () => {
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
 
-          {/* Authenticated User View */}
           {user ? (
             <>
               <Button color="inherit" component={Link} to="/dashboard">
                 Dashboard
               </Button>
 
-              {/* Avatar Menu */}
               <IconButton
                 color="inherit"
                 onClick={(e) => setAnchorEl(e.currentTarget)}
@@ -68,17 +71,13 @@ export const Navbar = () => {
               >
                 <MenuItem disabled>{user.name}</MenuItem>
                 <MenuItem
-                  onClick={() => {
-                    signout();
-                    setAnchorEl(null);
-                  }}
+                  onClick={handleSignout}
                 >
                   Sign Out
                 </MenuItem>
               </Menu>
             </>
           ) : (
-            // Guest View
             <>
               <Button color="inherit" component={Link} to="/">
                 Sign In

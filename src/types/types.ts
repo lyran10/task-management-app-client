@@ -17,6 +17,7 @@ createdAt: string;
 
 export interface AuthContextType {
 user: User | null;
+setUser : React.Dispatch<React.SetStateAction<User | null>>
 signin: (email: string, password: string) => Promise<User>;
 signup: (name: string, email: string, password: string) => Promise<User>;
 signout: () => void;
