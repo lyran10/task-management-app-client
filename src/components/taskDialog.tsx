@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "../common/loader";
 import { useAuth } from "../context/authContext";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export interface Task {
   _id?: string;
